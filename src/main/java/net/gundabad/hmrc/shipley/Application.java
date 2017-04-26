@@ -46,12 +46,27 @@ class Application {
      *
      * @param shoppingCart The names of the items to total; each element must
      *                     be one of {@code "apple"} or {@code "orange"}.
+     * @return the cost of the items in a textual format with currency symbol.
+     * @throws RuntimeException if any item is not known (i.e., is not
+     * either "apple" or "orange")
+     */
+    public static String getCartTotalCost(List<String> shoppingCart) {
+        return formatCurrency(getCartTotalCostWithoutDiscount(shoppingCart));
+    }
+
+    /**
+     * Given a list containing the names of known items, return the total cost
+     * of those items before any discount is applied.
+     * Throws a {@code RuntimeException} if any of the items are not recognised.
+     *
+     * @param shoppingCart The names of the items to total; each element must
+     *                     be one of {@code "apple"} or {@code "orange"}.
      * @return The cost of the items with the fractional part being the pence
      * and the integer part being the pounds.
      * @throws RuntimeException if any item is not known (i.e., is not
      * either "apple" or "orange")
      */
-    public static long getCartTotalCost(List<String> shoppingCart) {
+    private static long getCartTotalCostWithoutDiscount(List<String> shoppingCart) {
         return shoppingCart.stream()
                 .mapToLong(Application::itemCost)
                 .sum();
@@ -64,8 +79,8 @@ class Application {
      * @return A representation of the monetary value in pounds and pence of
      * the penny amount provided
      */
-    public static String formatCurrency(long pence) {
-        return "£" + BigDecimal.valueOf(pence).divide(BigDecimal.valueOf(100), BigDecimal.ROUND_UNNECESSARY).setScale(2, BigDecimal.ROUND_UNNECESSARY);
+    private static String formatCurrency(long pence) {
+        return "£" + BigDecimal.valueOf(pence).divide(BigDecimal.valueOf(100)).setScale(2);
     }
 
     /**

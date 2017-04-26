@@ -31,18 +31,18 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_single_apple_only_then_total_cost_is_60p() {
         List<String> shoppingCart = Collections.singletonList("apple");
 
-        long cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCost(shoppingCart);
 
-        assertThat(cost).isEqualTo(60L);
+        assertThat(cost).isEqualTo("£0.60");
     }
 
     @Test
     public void given_shopping_cart_list_when_single_orange_only_then_total_cost_is_25p() {
         List<String> shoppingCart = Collections.singletonList("orange");
 
-        long cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCost(shoppingCart);
 
-        assertThat(cost).isEqualTo(25L);
+        assertThat(cost).isEqualTo("£0.25");
     }
 
     @Test
@@ -68,17 +68,9 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_contains_known_items_then_expected_total_returned() {
         List<String> shoppingCart = Arrays.asList("apple", "apple", "orange", "apple");
 
-        long cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCost(shoppingCart);
 
-        assertThat(cost).isEqualTo(205L);
-    }
-
-    @Test
-    public void given_long_value_when_formatted_as_currency_then_result_as_expected() {
-
-        assertThat(Application.formatCurrency(0L)).isEqualTo("£0.00");
-        assertThat(Application.formatCurrency(60L)).isEqualTo("£0.60");
-        assertThat(Application.formatCurrency(205L)).isEqualTo("£2.05");
+        assertThat(cost).isEqualTo("£2.05");
     }
 
     @Test
