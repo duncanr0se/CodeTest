@@ -31,7 +31,7 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_single_apple_only_then_total_cost_is_60p() {
         List<String> shoppingCart = Collections.singletonList("apple");
 
-        String cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCostBeforeDiscount(shoppingCart);
 
         assertThat(cost).isEqualTo("£0.60");
     }
@@ -40,7 +40,7 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_single_orange_only_then_total_cost_is_25p() {
         List<String> shoppingCart = Collections.singletonList("orange");
 
-        String cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCostBeforeDiscount(shoppingCart);
 
         assertThat(cost).isEqualTo("£0.25");
     }
@@ -49,7 +49,7 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_unknown_item_only_then_exception_thrown() {
         List<String> shoppingCart = Collections.singletonList("appl");
 
-        Throwable thrown = catchThrowable(() -> Application.getCartTotalCost(shoppingCart));
+        Throwable thrown = catchThrowable(() -> Application.getCartTotalCostBeforeDiscount(shoppingCart));
 
         assertThat(thrown).isInstanceOf(RuntimeException.class);
     }
@@ -58,7 +58,7 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_contains_unknown_item_then_exception_thrown() {
         List<String> shoppingCart = Arrays.asList("apple", "apple", "orangutan", "apple");
 
-        Throwable thrown = catchThrowable(() -> Application.getCartTotalCost(shoppingCart));
+        Throwable thrown = catchThrowable(() -> Application.getCartTotalCostBeforeDiscount(shoppingCart));
 
         assertThat(thrown).isInstanceOf(RuntimeException.class);
 
@@ -68,7 +68,7 @@ public class ApplicationTest {
     public void given_shopping_cart_list_when_contains_known_items_then_expected_total_returned() {
         List<String> shoppingCart = Arrays.asList("apple", "apple", "orange", "apple");
 
-        String cost = Application.getCartTotalCost(shoppingCart);
+        String cost = Application.getCartTotalCostBeforeDiscount(shoppingCart);
 
         assertThat(cost).isEqualTo("£2.05");
     }
@@ -181,4 +181,95 @@ public class ApplicationTest {
         assertThat(offer).isEqualTo(0L);
     }
 
+
+    @Test
+    public void given_shopping_cart_list_when_single_apple_only_then_total_discounted_cost_is_60p() {
+        List<String> shoppingCart = Collections.singletonList("apple");
+
+        String cost = Application.getCartTotalCostAfterDiscount(shoppingCart);
+
+        assertThat(cost).isEqualTo("£0.60");
+    }
+
+    @Test
+    public void given_shopping_cart_list_when_single_orange_only_then_total_discounted_cost_is_25p() {
+        List<String> shoppingCart = Collections.singletonList("orange");
+
+        String cost = Application.getCartTotalCostAfterDiscount(shoppingCart);
+
+        assertThat(cost).isEqualTo("£0.25");
+    }
+
+    @Test
+    public void given_shopping_cart_list_when_contains_known_items_then_expected_discounted_total_returned() {
+        List<String> shoppingCart = Arrays.asList("apple", "apple", "orange", "apple");
+
+        String cost = Application.getCartTotalCostAfterDiscount(shoppingCart);
+
+        assertThat(cost).isEqualTo("£1.45");
+    }
+
+    @Test
+    public void given_cart_when_contains_4_oranges_and_1_apple_then_total_with_discount_is_135p() {
+        List<String> cart = Arrays.asList("apple", "orange", "orange", "orange", "orange");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£1.35");
+    }
+
+    @Test
+    public void given_cart_when_contains_6_oranges_3_apples_then_total_with_discount_is_220p() {
+        List<String> cart = Arrays.asList("apple", "orange", "apple", "orange", "apple",
+                "orange", "orange", "orange", "orange");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£2.20");
+    }
+
+    @Test
+    public void given_cart_when_contain_3_oranges_2_apples_then_total_with_discount_is_110p() {
+        List<String> cart = Arrays.asList("apple", "orange", "orange", "orange", "apple");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£1.10");
+    }
+
+    @Test
+    public void given_cart_when_contains_1_orange_3_apples_then_total_with_discount_is_145p() {
+        List<String> cart = Arrays.asList("apple", "orange", "apple", "apple");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£1.45");
+    }
+
+    @Test
+    public void given_cart_when_contains_1_orange_4_apples_then_total_with_discount_is_145p() {
+        List<String> cart = Arrays.asList("apple", "orange", "apple", "apple", "apple");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£1.45");
+    }
+
+    @Test
+    public void given_cart_when_contains_1_orange_2_apples_then_total_with_discount_is_85p() {
+        List<String> cart = Arrays.asList("orange", "apple", "apple");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£0.85");
+    }
+
+    @Test
+    public void given_cart_when_contains_1_orange_1_apple_then_total_with_discount_is_85p() {
+        List<String> cart = Arrays.asList("orange", "apple");
+
+        String total = Application.getCartTotalCostAfterDiscount(cart);
+
+        assertThat(total).isEqualTo("£0.85");
+    }
 }
