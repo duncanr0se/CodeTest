@@ -51,14 +51,20 @@ class Application {
      * @throws RuntimeException if any item is not known (i.e., is not
      * either "apple" or "orange")
      */
-    public static BigDecimal getCartTotalCost(List<String> shoppingCart) {
-        long costAsLong = shoppingCart.stream()
+    public static long getCartTotalCost(List<String> shoppingCart) {
+        return shoppingCart.stream()
                 .mapToLong(Application::itemCost)
                 .sum();
+    }
 
-        // Assumption: this method returns pounds + pence. Could be a SRP
-        // violation, perhaps this should return total in pence and that
-        // should be formatted elsewhere.
-        return BigDecimal.valueOf(costAsLong).divide(BigDecimal.valueOf(100)).setScale(2);
+    /**
+     * Format a value in pence into pounds and pence.
+     *
+     * @param pence value in pence
+     * @return A representation of the monetary value in pounds and pence of
+     * the penny amount provided
+     */
+    public static String formatCurrency(long pence) {
+        return "£" + BigDecimal.valueOf(pence).divide(BigDecimal.valueOf(100)).setScale(2);
     }
 }
