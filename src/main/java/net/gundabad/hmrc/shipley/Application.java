@@ -65,6 +65,47 @@ class Application {
      * the penny amount provided
      */
     public static String formatCurrency(long pence) {
-        return "£" + BigDecimal.valueOf(pence).divide(BigDecimal.valueOf(100)).setScale(2);
+        return "£" + BigDecimal.valueOf(pence).divide(BigDecimal.valueOf(100), BigDecimal.ROUND_UNNECESSARY).setScale(2, BigDecimal.ROUND_UNNECESSARY);
+    }
+
+    /**
+     * Return the number of item that is contained within the shopping cart
+     *
+     * @param shoppingCart list of names of items
+     * @param item name of item to count
+     * @return number of items named item in cart
+     */
+    public static long getItemCount(List<String> shoppingCart, String item) {
+        return shoppingCart.stream()
+                .filter(item::equals)
+                .count();
+    }
+
+    /**
+     * Calculate the discount offered based on the number of specific items
+     * in the cart.
+     *
+     * @param item the name of the item; dictates which offer is calculated
+     * @param count the number of specified item in the cart
+     * @return the discount offered, in pence
+     */
+    public static long calculateOfferDiscountInPence(String item, long count) {
+        switch(item) {
+            case "apple":
+                // Integer division is exactly what is wanted here. Offer is
+                // buy one get one free, need to know how many complete pairs
+                // of apples there are in the cart n and offer a discount of
+                // n apples
+                return (count / 2) * itemCost(item);
+            case "orange":
+                // Again, integer division is wanted. Offer is three for the
+                // price of two, need to know how many complete triplets of
+                // oranges there are in the cart n and offer a discount of
+                // n oranges.
+                return (count / 3) * itemCost(item);
+            default:
+                // No offers on unknown items, so no discount
+                return 0L;
+        }
     }
 }
